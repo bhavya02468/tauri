@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="second_page.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+
+
+
+<body>
+
+
+    <header>
+
+
+
+        <nav>
+            <ul class="nav__links">
+            </ul>
+        </nav>
+        <a href="" class="cta1"><i class="fa fa-refresh fa-3x" aria-hidden="true"></i></a>
+
+
+
+        <a class="cta2"><i onclick="logout()" class="fa fa-sign-out fa-3x" aria-hidden="true"></i></a>
+        <a class="cta3" onclick="change()">Change Password</a>
+
+        <img class="cta5" style="width:60px" src="assets/image.png" alt="">
+
+        <a id="cta4" class="cta4"></a>
+
+
+    </header>
+
+
+    <div id="container">
+        <div class="container mt-5 mb-3">
+            <div id="row" class="row">
+
+                <!-- <div class="card p-3 mb-2">
+                    <h3 class="heading">Senior ProductDesigner-Singapore</h3>
+                    <button>></button>
+                </div> -->
+
+                <!-- 
+                <div class="card p-3 mb-2">
+                    <h3 class="heading">Senior ProductDesigner-Singapore</h3>
+                </div>
+
+
+
+                <div class="card p-3 mb-2">
+                    <h3 class="heading">Senior ProductDesigner-Singapore</h3>
+                </div>
+            </div> -->
+            </div>
+
+
+
+        </div>
+
+
+
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<script>
+    function logout() {
+        location.href = "index.html"
+
+    }
+    function play(thi) {
+        console.log(thi.id)
+        let x = (localStorage.getItem(thi.id))
+        localStorage.setItem("mn", thi.id)
+        localStorage.setItem("pwd", x)
+        window.location.href = "zoom_page.html"
+    }
+    function change() {
+        location.href = "forgot.html"
+
+
+
+    }
+
+    $(document).ready(function () {
+
+
+        var accessToken = localStorage.getItem("accessToken")
+        console.log(accessToken)
+        console.log(typeof (localStorage.getItem("accessToken")))
+        var settings = {
+            "url": "http://35.154.197.125:3091/api/v1/user/home/list",
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+                "Authorization": "Basic c3BvcnRzYWxsOnJBI1NmdGhDSyRiPVVqZ05eOFhzZ0JOOGYtbllHaytxNF9L",
+                "accessToken": accessToken
+            },
+        };
+
+        $.ajax(settings)
+
+            .fail(function (jqXHR, exception) {
+                var main_body = document.getElementById("row")
+                main_body.innerHTML = "Something Went Wrong."
+                let x = document.createElement("p")
+                x.innerHTML = "Please Login Again"
+                main_body.append(x)
+                // let f=document.createElement("img")
+                // f.src="assets/unnamed.webp" 
+                // main_body.append(f)
+
+            })
+
+
+            .done(function (response) {
+
+
+                let len = response.res.schedules.length
+                console.log(response);
+
+                var schedules = response.res.schedules
+                let days_left = document.getElementById("cta4")
+                days_left.innerHTML = response.res.daysLeft + " Days Left"
+
+                console.log(response.res.daysLeft)
+
+
+
+                for (var i = len; i > 0; i--) {
+                    var main_body = document.getElementById("row")
+
+                    console.log(schedules[i - 1].leagueName)
+
+
+                    var leagueName = schedules[i - 1].leagueName
+
+                    var meetingId = schedules[i - 1].meetingId
+                    var meetingPass = schedules[i - 1].meetingPass
+                    localStorage.setItem(meetingId, meetingPass)
+
+                    var div = document.createElement("div")
+                    div.className = "card p-3 mb-2"
+
+
+                    var but = document.createElement("h3")
+                    but.id = meetingId
+                    but.className = "heading"
+
+
+                    but.setAttribute("onclick", "play(this)");
+                    // but.onclick=function(id){
+                    //     alert(but.id)
+                    // }
+
+                    but.innerHTML = leagueName
+
+                    div.append(but)
+                    main_body.append(div)
+
+                }
+
+
+            });
+
+
+
+
+
+        $('.close-btn').click(function () {
+            $('.alert').removeClass("show");
+            $('.alert').addClass("hide");
+
+        })
+
+    }
+    )
+
+
+
+
+</script>
+
+
+</html>

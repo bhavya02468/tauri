@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="origin-trial"
+        content="An/3TjgbxOqNcQSlYGFlbFUATxA1SWJMkAZBG3W9z5yCkRARQBaTq5U88MNU/XxZiylIhXBghWSFV5IxWJ1kzg4AAABgeyJvcmlnaW4iOiJodHRwOi8vMTI3LjAuMC4xOjU1MDAiLCJmZWF0dXJlIjoiVW5yZXN0cmljdGVkU2hhcmVkQXJyYXlCdWZmZXIiLCJleHBpcnkiOjE2NzUyOTU5OTl9" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>login</title>
+
+
+
+    <link rel="stylesheet" href="style2.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+        integrity="sha256-UhQQ4fxEeABh4JrcmAJ1+16id/1dnlOEVCFOxDef9Lw=" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css"
+        integrity="sha256-kksNxjDRxd/5+jGurZUJd1sdR2v+ClrCl3svESBaJqw=" crossorigin="anonymous" />
+
+
+
+<body>
+
+
+    <div class="container">
+
+        <div class="form sign-in-container" id="form" >
+            <form action="#">
+        <img style="height: 100px;width: 100px;" src="assets/output-onlinepngtools.png" alt="">
+
+                <h1>Login</h1>
+
+                <input id="username" type="username" placeholder="username">
+                <input id="password" type="password" placeholder="Password">
+                <input type="submit" id="hi" value="log in">
+
+            </form>
+        </div>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-right">
+                    <img style="height: 500px;
+                    width: 385px;" src="assets/unnamed.webp" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert hide">
+        <span class="fas fa-exclamation-circle"></span>
+        <span id="msg" class="msg">Warning: This is a warning alert!</span>
+        <div class="close-btn">
+            <span class="fas fa-times">X</span>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+
+
+
+
+        $('#form').submit(function () {
+            event.preventDefault();
+
+            u = $("#username").val()
+            p = $("#password").val()
+            var h = 0
+
+            var settings = {
+                "url": "http://35.154.197.125:3091/api/v1/user/login",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Authorization": "Basic c3BvcnRzYWxsOnJBI1NmdGhDSyRiPVVqZ05eOFhzZ0JOOGYtbllHaytxNF9L",
+                    "Content-Type": "application/x-www-form-urlencoded"
+
+                },
+                "data": {
+                    "phone": u,
+                    "password": p
+                }
+            };
+
+
+            $.ajax(settings)
+
+                .done(function (response) {
+                    localStorage.setItem("accessToken", response.res.accessToken)
+                    localStorage.setItem("name", $("#username").val())
+                    localStorage.setItem("login", "true")
+                    console.log(response.res.accessToken);
+                    window.location.href = "second_page.html"
+                    localStorage.setItem("password",p)
+                })
+
+
+                .fail(function (jqXHR, exception) {
+                    console.log(jqXHR.responseJSON.err.msg)
+                    $('.alert').addClass("show");
+                    $('.alert').removeClass("hide");
+                    $('.alert').addClass("showAlert");
+                    console.log(exception)
+                    if (jqXHR.responseJSON.err.msg=="Invalid data"){
+                        window.document.getElementById("msg").innerHTML = "No Data Entered"
+
+                    }else{
+                        window.document.getElementById("msg").innerHTML =jqXHR.responseJSON.err.msg
+                    }
+
+                    setTimeout(function () {
+                        $('.alert').removeClass("show");
+                        $('.alert').addClass("hide");
+                    }, 3000);
+                });
+            $('.close-btn').click(function () {
+                $('.alert').removeClass("show");
+                $('.alert').addClass("hide");
+
+            })
+        })
+
+    </script>
+</body>
+
+</html>
